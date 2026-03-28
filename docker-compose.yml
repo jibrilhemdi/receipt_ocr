@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    container_name: receipt-api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql+psycopg2://user:password@db:5432/receipts_db
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: receipt-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: receipts_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: receipt-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
