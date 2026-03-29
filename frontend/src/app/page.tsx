@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { uploadReceipt, fetchReceipts, deleteReceipt } from "../lib/api";
 import type { Receipt } from "../types/receipt";
 
 export default function HomePage() {
